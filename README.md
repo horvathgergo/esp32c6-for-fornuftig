@@ -6,7 +6,7 @@ Smart controller for IKEA Förnuftig Air Purifiers (ESP32 version)
 ![Image](https://github.com/user-attachments/assets/0f3e21fe-031f-41c8-8963-674925d908cf)
 New version of the fan controller is ready to test. A few changes have been made in the current 4.0 version 😎 
 
-It is based on a pure ESP32-C6 chip that enables to leverage WIFI, Zigbee or Thread.
+It is based on an ESP32-C6-WROOM-1N8 module that enables to leverage WIFI 6, Bluetooth 5, Zigbee 3.0 or Thread.
 
 The previous voltage regulator was also replaced with a better one. The current AP63203WU has higher frequency (>1MHz) and requires cheaper and smaller-sized external components. 
 

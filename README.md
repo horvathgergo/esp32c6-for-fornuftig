@@ -3,8 +3,7 @@ Smart controller for IKEA Förnuftig Air Purifiers (ESP32 version)
 
 # Hardware
 
-![IMG_0087](https://github.com/horvathgergo/esp32c3-for-fornuftig/assets/44551566/d7020a72-bf55-40b3-8224-49519e7beffc)
-
+![Image](https://github.com/user-attachments/assets/0f3e21fe-031f-41c8-8963-674925d908cf)
 New version of the fan controller is ready to test. A few changes have been made in the current 4.0 version 😎 
 
 It is based on a pure ESP32-C6 chip that enables to leverage WIFI, Zigbee or Thread.

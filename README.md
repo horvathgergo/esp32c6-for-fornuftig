@@ -12,3 +12,4 @@ The previous voltage regulator was also replaced with a better one. The current 
 
 In this version an SR1712F 4-gear 15mm D-shaft rotary switch was attached for manual operation.
 
+![Image](https://github.com/user-attachments/assets/72a3cf68-f232-4449-a807-bd6899b04a16)

@@ -1,4 +1,4 @@
-# esp32c6-for-fornuftig
+# Smart Air Purifier ESP32-C6 (Project Fornuftig)
 Smart controller for IKEA Förnuftig Air Purifiers (ESP32 version)
 
 # Hardware

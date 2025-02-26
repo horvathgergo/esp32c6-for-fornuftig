@@ -22,6 +22,8 @@ The ESP32-C6 will enter the serial bootloader when GPIO9 (BOOT) is held low on r
 
 Although the ESP32-C6 chip is not officially supported by ESPHome yet, you can use its Wi-Fi capabilities without any issues by defining the board type and esp-idf framework version (tested only with ESPhome 2025.01). In the future, ESPHome is expected to support Zigbee on the C6 chip as well. For now, you can only use Espressif Matter SDK to develop Thread-based firmware.
 
+Example config:
+
 ```yaml
 
 substitutions:

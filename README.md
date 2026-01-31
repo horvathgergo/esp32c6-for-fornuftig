@@ -20,7 +20,7 @@ The ESP32-C6 will enter the serial bootloader when GPIO9 (BOOT) is held low on r
 
 # ESPHOME Configuration
 
-Although the ESP32-C6 chip is not officially supported by ESPHome yet, you can use its Wi-Fi capabilities without any issues by defining the board type and esp-idf framework version (tested only with ESPhome 2025.01). In the future, ESPHome is expected to support Zigbee on the C6 chip as well. For now, you can only use Espressif Matter SDK to develop Thread-based firmware.
+The ESP32-C6 chip is now officially supported by ESPHome, so you can use its thread capabilities without any issues. It is tested with ESPhome version 2025.12 with the following example.
 
 Example config:
 
@@ -35,12 +35,8 @@ esphome:
 
 esp32:
   board: esp32-c6-devkitc-1
-  flash_size: 8MB
-  variant: esp32c6
   framework:
     type: esp-idf
-    version: "5.3.1"
-    platform_version: 6.9.0
 
 # Enable logging
 logger:
@@ -54,16 +50,12 @@ ota:
   - platform: esphome
     password: "YOUR PASSWORD"
 
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+#THREAD
+network:
+  enable_ipv6: true
 
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "Air Purifier Fallback Hotspot"
-    password: "YOUR PASSWORD"
-
-captive_portal:
+openthread:
+  tlv: "YOUR TLV"
     
 
 output:

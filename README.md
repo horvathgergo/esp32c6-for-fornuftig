@@ -40,7 +40,7 @@ The ESP32-C6 will enter the serial bootloader when GPIO9 (BOOT) is held low on r
 | J3         | PinHeader_1x02_P2.54mm_Vertical    | UART                     |
 | J4         | PinHeader_1x02_P2.54mm_Vertical    | RST                      |
 | J5         | PinHeader_1x02_P2.54mm_Vertical    | BOOT                     |
-| S1         | SRBV141404                         | SRBV181004 switch        |
+| S1         | SR1712F                            | SR1712F    switch        |
 
 # ESPHOME Configuration
 

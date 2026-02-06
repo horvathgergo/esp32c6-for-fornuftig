@@ -18,6 +18,30 @@ MCU programming: the board supports only UART programming via TX, RX pin headers
 
 The ESP32-C6 will enter the serial bootloader when GPIO9 (BOOT) is held low on reset. It is recommended to use jumper caps on the BOOT and RST pin headers. Plug the device, add a cap on the BOOT pin, then on RST pin (so both held low), remove the cap from the RST pin, flash the firmware, if successful remove the cap from the BOOT pin. Restart the device.
 
+# Components
+
+| Designator | Items                              | Designation              |
+|------------|------------------------------------|--------------------------|
+| IC1        | ESP32-C6-WROOM-1-N8                | ESP Modul                |
+| C2         | 22uF, >6V, 1206                    | Decoupling capacitor     |
+| C4         | 100nF, >6V, 0805                   | Decoupling capacitor     |
+| R1         | 10K, 0805                          | IO9 resistor             |
+| R4         | 10K, 0805                          | EN resistor              |
+| R5         | 10K, 0805                          | IO8 resistor             |
+| C1         | 10uF, >30V, 1206                   | Buck input capacitor     |
+| C19        | 22uF, >6V, 1206                    | Buck output capacitor    |
+| C11        | 22uF, >6V, 1206                    | Buck output capacitor    |
+| C3         | 100nF, >6V, 0805                   | Buck bootstrap capacitor |
+| L1         | 4.7uH, L_6.7x7.0_H2.8              | Buck inductor            |
+| U1         | TSOT-23-6                          | AP63203WU                |
+| J1         | JST_XH 2P                          | Power                    |
+| J2         | JST_XH 4P                          | Fan                      |
+| F1         | 10A, 1206                          | Fuse                     |
+| J3         | PinHeader_1x02_P2.54mm_Vertical    | UART                     |
+| J4         | PinHeader_1x02_P2.54mm_Vertical    | RST                      |
+| J5         | PinHeader_1x02_P2.54mm_Vertical    | BOOT                     |
+| S1         | SRBV141404                         | SRBV181004 switch        |
+
 # ESPHOME Configuration
 
 The ESP32-C6 chip is now officially supported by ESPHome, so you can use its thread capabilities without any issues. It is tested with ESPhome version 2025.12 with the following example.

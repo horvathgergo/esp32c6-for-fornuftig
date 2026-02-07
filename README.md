@@ -4,19 +4,36 @@ Smart controller for IKEA Förnuftig Air Purifiers (ESP32 version)
 # Hardware
 
 ![Image](https://github.com/user-attachments/assets/0f3e21fe-031f-41c8-8963-674925d908cf)
-New version of the fan controller is ready to test. A few changes have been made in the current 4.0 version 😎 
 
-It is based on an ESP32-C6-WROOM-1N8 module that enables to leverage WIFI 6, Bluetooth 5, Zigbee 3.0 or Thread.
+Fan Controller v4.0 – Ready for Testing 😎
 
-The previous voltage regulator was also replaced with a better one. The current AP63203WU has higher frequency (>1MHz) and requires cheaper and smaller-sized external components. 
+A new version of the fan controller is now ready for testing. Several improvements have been introduced in **version 4.0**.
 
-In this version an SR1712F 4-gear 15mm D-shaft rotary switch was attached for manual operation.
+The board is based on the **ESP32-C6-WROOM-1N8** module, enabling support for **Wi-Fi 6, Bluetooth 5, Zigbee 3.0, and Thread**.
+
+The previous voltage regulator has been replaced with a better alternative. The new **AP63203WU** operates at a higher switching frequency (>1 MHz) and requires **smaller and more cost-effective external components**.
+
+This version also adds an **SR1712F 4-position, 15 mm D-shaft rotary switch** for manual operation.
 
 ![Image](https://github.com/user-attachments/assets/72a3cf68-f232-4449-a807-bd6899b04a16)
 
-MCU programming: the board supports only UART programming via TX, RX pin headers on the righ side of the ESP module (no USB interface), thus USB to TTL converter is necessary to upload your firmware. It is recommended to supply the module via VIN and GND pins during initial setup. It is compatible with +5-24V supply (note: in serial bootloader mode you need to supply at least +5V. Standard +3v3 won't work as you may experience some voltage drop via the buck converter so make sure to provide enough voltage during flashing. Supplying +5V won't hurt the ESP as the VIN pin of the board is not directly connected to chip). 
+MCU programming: The board supports UART programming only via the TX and RX pin headers on the right side of the ESP module (there is no USB interface on the board). Therefore, a **USB-to-TTL converter is required** to upload firmware. USB-TTL converters are cheap and broadly available.
 
-The ESP32-C6 will enter the serial bootloader when GPIO9 (BOOT) is held low on reset. It is recommended to use jumper caps on the BOOT and RST pin headers. Plug the device, add a cap on the BOOT pin, then on RST pin (so both held low), remove the cap from the RST pin, flash the firmware, if successful remove the cap from the BOOT pin. Restart the device.
+It is recommended to power the module via the VIN and GND pins during the initial setup. The board is compatible with a +5–24V supply.
+
+Note: In serial bootloader mode, you must **supply at least +5V**. A standard +3.3V supply will not work, as voltage drop across the buck converter may prevent proper operation. Make sure to provide sufficient input voltage during flashing. Supplying +5V is safe, as the **VIN pin is not directly connected to the ESP chip**.
+
+he ESP32-C6 enters serial bootloader mode when **GPIO9 (BOOT)** is held low during reset. It is recommended to use jumper caps on the **BOOT** and **RST** pin headers.
+
+Flashing procedure:
+1. Connect the USB-to-TTL converter to the board.
+2. Power the device.
+3. Place a jumper cap on the BOOT pin.
+4. Place a jumper cap on the RST pin (both pins are now held low).
+5. Remove the jumper cap from the RST pin.
+6. Flash the firmware.
+7. If flashing is successful, remove the jumper cap from the BOOT pin.
+8. Restart the device.
 
 # Components
 
@@ -40,11 +57,19 @@ The ESP32-C6 will enter the serial bootloader when GPIO9 (BOOT) is held low on r
 | J3         | PinHeader_1x02_P2.54mm_Vertical    | UART                     |
 | J4         | PinHeader_1x02_P2.54mm_Vertical    | RST                      |
 | J5         | PinHeader_1x02_P2.54mm_Vertical    | BOOT                     |
-| S1         | SR1712F                            | SR1712F    switch        |
+| S1         | SR1712F                            | SR1712F switch           |
+
+# BOM and CPL
+
+This hardware project was primarily designed for manual assembly.
+Due to multiple requests, I have uploaded the BOM and CPL files to this repository. Please note that these files are provided for reference only. I have not tested this design with automated assembly or PCB manufacturing services, so there may be inaccuracies or missing details.
+If you plan to use these files for automated assembly, please review and verify them carefully before placing any orders.
+
+Please also note that no suitable rotary switch or SMD fuse was found in the JLCPCB parts library, so these parts may require manual assembly.
 
 # ESPHOME Configuration
 
-The ESP32-C6 chip is now officially supported by ESPHome, so you can use its thread capabilities without any issues. It is tested with ESPhome version 2025.12 with the following example.
+The ESP32-C6 chip is now officially supported by ESPHome, so you can use its Thread capabilities without any issues. It has been tested with ESPhome version 2025.12 using the following example.
 
 Example config:
 

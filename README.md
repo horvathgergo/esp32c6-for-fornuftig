@@ -23,7 +23,7 @@ It is recommended to power the module via the VIN and GND pins during the initia
 
 Note: In serial bootloader mode, you must **supply at least +5V**. A standard +3.3V supply will not work, as voltage drop across the buck converter may prevent proper operation. Make sure to provide sufficient input voltage during flashing. Supplying +5V is safe, as the **VIN pin is not directly connected to the ESP chip**.
 
-he ESP32-C6 enters serial bootloader mode when **GPIO9 (BOOT)** is held low during reset. It is recommended to use jumper caps on the **BOOT** and **RST** pin headers.
+The ESP32-C6 enters serial bootloader mode when **GPIO9 (BOOT)** is held low during reset. It is recommended to use jumper caps on the **BOOT** and **RST** pin headers.
 
 Flashing procedure:
 1. Connect the USB-to-TTL converter to the board.

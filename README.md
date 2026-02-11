@@ -1,3 +1,12 @@
+<p align="left">
+  <a href="https://ko-fi.com/horvathgergo">
+    <img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi">
+  </a>
+</p>
+If you can, please support the development and testing of prototypes with €1.
+Your kind support greatly helps cover components, PCBs, and tools.
+
+
 # Smart Air Purifier ESP32-C6 (Project Fornuftig)
 Smart controller for IKEA Förnuftig Air Purifiers (ESP32 version)
 

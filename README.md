@@ -48,7 +48,7 @@ Flashing procedure:
 
 | Designator | Items                              | Designation              |
 |------------|------------------------------------|--------------------------|
-| IC1        | ESP32-C6-WROOM-1-N8                | ESP Modul                |
+| IC1        | ESP32-C6-WROOM-1-N8                | ESP modul                |
 | C2         | 22uF, >6V, 1206                    | Decoupling capacitor     |
 | C4         | 100nF, >6V, 0805                   | Decoupling capacitor     |
 | R1         | 10K, 0805                          | IO9 resistor             |
@@ -58,15 +58,15 @@ Flashing procedure:
 | C19        | 22uF, >6V, 1206                    | Buck output capacitor    |
 | C11        | 22uF, >6V, 1206                    | Buck output capacitor    |
 | C3         | 100nF, >6V, 0805                   | Buck bootstrap capacitor |
-| L1         | 4.7uH, L_6.7x7.0_H2.8              | Buck inductor            |
-| U1         | TSOT-23-6                          | AP63203WU                |
+| L1         | HPI0630-4R7, L_6.7x7.0             | Buck inductor            |
+| U1         | AP63203WU, TSOT-23-6               | Buck converter           |
 | J1         | JST_XH 2P                          | Power                    |
 | J2         | JST_XH 4P                          | Fan                      |
-| F1         | 10A, 1206                          | Fuse                     |
+| F1         | 1A, 1206                           | Fuse                     |
 | J3         | PinHeader_1x02_P2.54mm_Vertical    | UART                     |
 | J4         | PinHeader_1x02_P2.54mm_Vertical    | RST                      |
 | J5         | PinHeader_1x02_P2.54mm_Vertical    | BOOT                     |
-| S1         | SR1712F                            | SR1712F switch           |
+| S1         | SR1712F                            | Physical switch          |
 
 # BOM and CPL
 

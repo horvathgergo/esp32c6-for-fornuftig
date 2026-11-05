@@ -118,7 +118,7 @@ openthread:
 
 output:
   - platform: ledc
-    pin: 18 
+    pin: 18
     frequency: 150 Hz
     id: pwm_output
     min_power: 0.5
@@ -128,79 +128,91 @@ output:
 fan:
   - platform: speed
     output: pwm_output
-    name: "$friendly_name"
-    id: "$fan_name"
-    restore_mode: RESTORE_DEFAULT_OFF
+    name: ""
+    id: $fan_name
+
+    speed_count: 3
+    preset_modes:
+      - "Low"
+      - "Medium"
+      - "High"
+
+    restore_mode: ALWAYS_OFF
+
     on_speed_set:
-      lambda: |-
-        if(id($fan_name).speed != id(fan_speed) && id($fan_name).state){
-          id(fan_speed) = id($fan_name).speed;
-          id(set_fan_freq).publish_state(id($fan_name).speed);
-        }
+      then:
+        - lambda: |-
+            int s = id($fan_name).speed;
+
+            // Auto-on:
+            if (!id($fan_name).state && s > 0) {
+              auto call = id($fan_name).turn_on();
+              call.set_speed(s);
+              call.perform();
+              return;
+            }
+
+            // Frequency update (33, 66, 100 -> *3)
+            float freq = 0;
+            if (s == 1) freq = 33 * 3;
+            else if (s == 2) freq = 66 * 3;
+            else if (s == 3) freq = 100 * 3;
+
+            id(set_fan_freq).publish_state(freq);
+
     on_turn_on:
-      lambda: |-
-       id(set_fan_freq).publish_state(id($fan_name).speed);
+      then:
+        - lambda: |-
+            int s = id($fan_name).speed;
+            if (s <= 0) s = 1;
+
+            float freq = 0;
+            if (s == 1) freq = 33 * 3;
+            else if (s == 2) freq = 66 * 3;
+            else if (s == 3) freq = 100 * 3;
+
+            id(set_fan_freq).publish_state(freq);
+
     on_turn_off:
-      - output.ledc.set_frequency:
-          id: pwm_output
-          frequency: !lambda 'return int(0);'
-      - logger.log: "Fan Turned Off!"
+      then:
+        - output.ledc.set_frequency:
+            id: pwm_output
+            frequency: !lambda 'return int(0);'
+        - logger.log: "Fan Turned Off!"
 
 sensor:
-  - platform: pulse_counter
-    pin: 
+  - platform: pulse_meter
+    pin:
       number: 19
       mode: INPUT_PULLUP
     unit_of_measurement: 'RPM'
     accuracy_decimals: 0
     id: fan_tach
-    name: $friendly_name Fanspeed #HA entity
+    name: "$friendly_name Fanspeed"
+    internal: true
+    timeout: 2s
     filters:
-      - multiply: 0.1
+      - multiply: 0.5
+      - throttle: 1s
 
   - platform: template
     id: set_fan_freq
-    name: "$friendly_name Fan Frequency"  #HA entity
+    name: "$friendly_name Fan Frequency"
     filters:
-      - multiply: 3
-      - lambda: |-
-          if (id($fan_name).state){
-            if(x > 300) { // limit max frequency
-              return 300;
-              
-            } else if(x < 36 && x > 3) { // limit low frequency
-              return 36;
-              
-            } else if(x <= 3) {
-              return 0;
-              
-            } else {
-              return x;
-              
-            }
-          } else {
-            return 0;
-          }
+      - throttle: 100ms
     on_value:
       then:
         - output.ledc.set_frequency:
             id: pwm_output
-            frequency: !lambda 'return int(x);'
-        - logger.log: "on_value called"
-        - lambda: |- 
-            // send current status to homeassistant
-            if(x) {
-              auto call = id($fan_name).turn_on();
-              call.set_speed(int(x)/3);
-              call.perform();
-            } else {
-              auto call = id($fan_name).turn_off();
-              call.perform();
-            }
-
+            frequency: !lambda 'return (int)x;'
+        - logger.log:
+            format: "Set PWM frequency: %d"
+            args: [ "(int)x" ]
+            
+# Rotary Knob (OFF position)
 binary_sensor:
   - platform: template
-    id: 'knob_0'
+    id: knob_0
     filters:
       - delayed_on_off: 300ms
     lambda: |-
@@ -209,77 +221,54 @@ binary_sensor:
       } else {
         return false;
       }
-    on_press: 
-      lambda: |-
-        if(!id(speed_0)){
-          auto call = id($fan_name).turn_off();
-          call.perform();
-        }else{
-          auto call = id($fan_name).turn_on();
-          call.set_speed(id(speed_0));
-          call.perform();
-        }
-
-  - platform: template                      #Ha entity
-    name: "$friendly_name Speed 1"
-    lambda: |-
-      if (id(set_fan_freq).state >= 60 and id(set_fan_freq).state < 100 and id($fan_name).state) {
-        return true;
-      } else {
-        return false;
-      }
-      
-  - platform: template                      #Ha entity
-    name: "$friendly_name Speed 2"
-    lambda: |-
-      if (id(set_fan_freq).state >= 100 and id(set_fan_freq).state < 200 and id($fan_name).state) {
-        return true;
-      } else {
-        return false;
-      }
-
-  - platform: template                      #Ha entity
-    name: "$friendly_name Speed 3"
-    lambda: |-
-      if (id(set_fan_freq).state >= 200 and id($fan_name).state) {
-        return true;
-      } else {
-        return false;
-      }      
-
+    on_press:
+      then:
+        - lambda: |-
+            if (!id($fan_name).state) {
+              // If OFF, then turn on preset LOW (speed 1)
+              auto call = id($fan_name).turn_on();
+              call.set_speed(1);
+              call.perform();
+            } else {
+              // If ON, then turn off
+              auto call = id($fan_name).turn_off();
+              call.perform();
+            }
 
   - platform: gpio
-    id: 'knob_1'
+    id: knob_1
     pin:
       number: 12
       mode: INPUT_PULLUP
       inverted: true
     filters:
       - delayed_on_off: 100ms
-    on_press: 
+    on_press:
       then:
-        - fan.turn_on:
-            id: $fan_name
-            speed: !lambda 'return id(speed_1);'
-    
-    
+        - lambda: |-
+            auto f = id($fan_name);
+            auto call = f->turn_on();
+            call.set_speed(1);
+            call.perform();
+
   - platform: gpio
-    id: 'knob_2'
+    id: knob_2
     pin:
       number: 11
       mode: INPUT_PULLUP
       inverted: true
     filters:
       - delayed_on_off: 100ms
-    on_press: 
+    on_press:
       then:
-        - fan.turn_on:
-            id: $fan_name
-            speed: !lambda 'return id(speed_2);'
-  
-  
+        - lambda: |-
+            auto f = id($fan_name);
+            auto call = f->turn_on();
+            call.set_speed(2);
+            call.perform();
+
   - platform: gpio
-    id: 'knob_3'
+    id: knob_3
     pin:
       number: 10
       mode: INPUT_PULLUP
@@ -288,32 +277,15 @@ binary_sensor:
       - delayed_on_off: 100ms
     on_press:
       then:
-        - fan.turn_on:
-            id: $fan_name
-            speed: !lambda 'return id(speed_3);'
+        - lambda: |-
+            auto f = id($fan_name);
+            auto call = f->turn_on();
+            call.set_speed(3);
+            call.perform();
 
 globals:
   - id: fan_speed
     type: int
     restore_value: yes
     initial_value: '0'
-    
-  - id: speed_0
-    type: int
-    restore_value: yes
-    initial_value: '0'
-    
-  - id: speed_1
-    type: int
-    restore_value: yes
-    initial_value: '33'
-    
-  - id: speed_2
-    type: int
-    restore_value: yes
-    initial_value: '66'
-    
-  - id: speed_3
-    type: int
-    restore_value: yes
-    initial_value: '100'
+
